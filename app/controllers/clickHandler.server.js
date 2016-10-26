@@ -1,10 +1,12 @@
 'use strict';
 
-function clickHandler (db) {
+var database = require('../database');
+
+var clickHandler = (function() {
+   var db = database.getClient();
    var clicks = db.collection('clicks');
 
-   this.getClicks = function (req, res) {
-
+   function getClicks(req, res) {
       var clickProjection = { '_id': false };
 
       clicks.findOne({}, clickProjection, function (err, result) {
@@ -30,9 +32,9 @@ function clickHandler (db) {
             });
          }
       });
-   };
+   }
 
-   this.addClick = function (req, res) {
+   function addClick (req, res) {
       clicks.findAndModify({}, { '_id': 1 }, { $inc: { 'clicks': 1 }}, function (err, result) {
          if (err) {
             throw err;
@@ -40,16 +42,23 @@ function clickHandler (db) {
 
          res.json(result);
       });
-   };
+   }
 
-   this.resetClicks = function (req, res) {
+   function resetClicks (req, res) {
       clicks.update({}, { 'clicks': 0 }, function (err, result) {
          if (err) {
             throw err;
          }
          res.json(result);
       });
-   };
-}
+   }
+
+   return {
+      getClicks: getClicks,
+      addClick: addClick,
+      resetClicks: resetClicks
+   }
+
+})();
 
 module.exports = clickHandler;

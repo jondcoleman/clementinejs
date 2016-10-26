@@ -1,17 +1,12 @@
 'use strict';
+var path = require('path');
+var routes = require('express').Router();
+var clicks = require('./clicks/index.js');
 
-var ClickHandler = require(process.cwd() + '/app/controllers/clickHandler.server.js');
+routes.get('/', function (req, res) {
+   res.sendFile(path.resolve(__dirname + '/../../public/index.html'));
+})
 
-module.exports = function (app, db) {
-   var clickHandler = new ClickHandler(db);
+routes.use('/api/clicks', clicks);
 
-   app.route('/')
-      .get(function (req, res) {
-         res.sendFile(process.cwd() + '/public/index.html');
-      });
-
-   app.route('/api/clicks')
-      .get(clickHandler.getClicks)
-      .post(clickHandler.addClick)
-      .delete(clickHandler.resetClicks);
-};
+module.exports = routes;
