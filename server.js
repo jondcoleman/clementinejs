@@ -7,7 +7,6 @@ var routes = require('./app/routes/index.js');
 var app = express();
 
 mongo.connect('mongodb://localhost:27017/clementinejs', function (err, db) {
-
    if (err) {
       throw new Error('Database failed to connect!');
    } else {
@@ -22,5 +21,4 @@ mongo.connect('mongodb://localhost:27017/clementinejs', function (err, db) {
    app.listen(3000, function () {
       console.log('Node.js listening on port 3000...');
    });
-
 });
